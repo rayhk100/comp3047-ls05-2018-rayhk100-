@@ -11,10 +11,10 @@ module.exports = {
         if (req.method == "POST") {
 
             await Person.create(req.body.Person);
-            return res.send("Successfully Created!");
+            return res.send("Successfully Created!");  //add data
 
         } else {
-            return res.view('person/create');
+            return res.view('person/create');       //form to user
         }
     },
     // action - index
