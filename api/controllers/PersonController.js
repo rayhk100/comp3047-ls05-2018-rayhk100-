@@ -57,33 +57,36 @@ delete: async function (req, res) {
 
 },
     // action - update
-    update: async function (req, res) {
+update: async function (req, res) {
 
-        var pid = parseInt(req.params.id) || -1;
+    var message = Person.getInvalidIdMsg(req.params);
 
-        if (req.method == "GET") {
+    if (message) return res.badRequest(message);
 
-            var model = await Person.findOne(pid);
+    if (req.method == "GET") {
 
-            if (model != null)
-                return res.view('person/update', { 'person': model });
-            else
-                return res.send("No such person!");
+        var model = await Person.findOne(req.params.id);
 
-        } else {
+        if (!model) return res.notFound();
 
-            var models = await Person.update(pid).set({
-                name: req.body.Person.name,
-                age: req.body.Person.age
-            }).fetch();
+        return res.view('person/update', { 'person': model });
 
-            if (models.length > 0)
-                return res.send("Record updated");
-            else
-                return res.send("No such person!");
+    } else {
 
-        }
-    },
+        if (typeof req.body.Person === "undefined")
+            return res.badRequest("Form-data not received.");
+
+        var models = await Person.update(req.params.id).set({
+            name: req.body.Person.name,
+            age: req.body.Person.age
+        }).fetch();
+
+        if (models.length == 0) return res.notFound();
+
+        return res.ok("Record updated");
+
+    }
+},
     // action - search
     search: async function (req, res) {
 
