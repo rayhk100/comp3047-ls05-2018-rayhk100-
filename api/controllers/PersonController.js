@@ -41,22 +41,21 @@ view: async function (req, res) {
 
 },
     // action - delete 
-    delete: async function (req, res) {
+delete: async function (req, res) {
 
-        if (req.method == "POST") {
-            const pid = parseInt(req.params.id) || -1;
+    if (req.method == "GET") return res.forbidden();
 
-            var models = await Person.destroy(pid).fetch();
+    var message = Person.getInvalidIdMsg(req.params);
 
-            if (models.length > 0)
-                return res.send("Person Deleted.");
-            else
-                return res.send("Person not found.");
+    if (message) return res.badRequest(message);
 
-        } else {
-            return res.send("Request Forbidden");
-        }
-    },
+    var models = await Person.destroy(req.params.id).fetch();
+
+    if (models.length == 0) return res.notFound();
+
+    return res.ok("Person Deleted.");
+
+},
     // action - update
     update: async function (req, res) {
 
