@@ -27,17 +27,19 @@ module.exports = {
 
     },
     // action - view
-    view: async function (req, res) {
+view: async function (req, res) {
 
-        var pid = parseInt(req.params.id) || -1;
+    var message = Person.getInvalidIdMsg(req.params);
 
-        var model = await Person.findOne(pid);
+    if (message) return res.badRequest(message);
 
-        if (model != null)
-            return res.view('person/view', { 'person': model });  //execrise view
-        else
-            return res.send("No such person");
-    },
+    var model = await Person.findOne(req.params.id);
+
+    if (!model) return res.notFound();
+
+    return res.view('person/view', { 'person': model });
+
+},
     // action - delete 
     delete: async function (req, res) {
 
