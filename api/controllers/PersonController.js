@@ -114,11 +114,16 @@ module.exports = {
     // action - paginate
     paginate: async function (req, res) {
 
-        const qPage = req.query.page - 1 || 0;
+        const qPage = Math.max(req.query.page - 1, 0) || 0;
 
-        var persons = await Person.find().paginate(qPage, 2);
+        const numOfItemsPerPage = 2;
 
-        var numOfPage = Math.ceil(await Person.count() / 2);
+        var persons = await Person.find({
+            limit: numOfItemsPerPage,
+            skip: numOfItemsPerPage * qPage
+        });
+
+        var numOfPage = Math.ceil(await Person.count() / numOfItemsPerPage);
 
         return res.view('person/paginate', { 'persons': persons, 'count': numOfPage });
     },
