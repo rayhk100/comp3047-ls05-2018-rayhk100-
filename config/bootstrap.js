@@ -9,7 +9,7 @@
  * https://sailsjs.com/config/bootstrap
  */
 
-module.exports.bootstrap = async function(done) {
+module.exports.bootstrap = async function (done) {
 
   // By convention, this is a good place to set up fake data during development.
   //
@@ -26,13 +26,22 @@ module.exports.bootstrap = async function(done) {
   //   // etc.
   // ]);
   // ```
+  sails.bcrypt = require('bcrypt');
+  const saltRounds = 10;
   if (await Person.count() > 0) {
     return done();
-}
+  }
 
-await Person.createEach([
+  await Person.createEach([
     { name: "Martin Choy", age: 23 },
     { name: "Kenny Cheng", age: 22 }
+    // etc.
+  ]);
+  const hash = await sails.bcrypt.hash('123456', saltRounds);
+
+await User.createEach([
+    { "username": "admin", "password": hash },
+    { "username": "boss", "password": hash }
     // etc.
 ]);
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
