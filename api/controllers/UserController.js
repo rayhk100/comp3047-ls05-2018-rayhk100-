@@ -52,5 +52,58 @@ module.exports = {
             return res.ok("Log out successfully");
         });
     },
+    populate: async function (req, res) {
+
+        if (!['supervises'].includes(req.params.association)) return res.notFound();
+    
+        const message = sails.getInvalidIdMsg(req.params);
+    
+        if (message) return res.badRequest(message);
+    
+        var model = await User.findOne(req.params.id).populate(req.params.association);
+    
+        if (!model) return res.notFound();
+    
+        return res.json(model);
+    
+    },
+    add: async function (req, res) {
+
+        if (!['supervises'].includes(req.params.association)) return res.notFound();//check supervises in link
+    
+        const message = sails.getInvalidIdMsg(req.params);
+    
+        if (message) return res.badRequest(message);
+    
+        if (!await User.findOne(req.params.id)) return res.notFound();//check id user
+    
+        if (req.params.association == "supervises") {
+            if (!await Person.findOne(req.params.fk)) return res.notFound();//check id person
+        }
+    
+        await User.addToCollection(req.params.id, req.params.association).members(req.params.fk);
+    
+        return res.ok('Operation completed.');
+    
+    },
+    remove: async function (req, res) {
+
+        if (!['supervises'].includes(req.params.association)) return res.notFound();
+    
+        const message = sails.getInvalidIdMsg(req.params);
+    
+        if (message) return res.badRequest(message);
+    
+        if (!await User.findOne(req.params.id)) return res.notFound();
+    
+        if (req.params.association == "supervises") {
+            if (!await Person.findOne(req.params.fk)) return res.notFound();
+        }
+    
+        await User.removeFromCollection(req.params.id, req.params.association).members(req.params.fk);
+    
+        return res.ok('Operation completed.');
+    
+    },
 };
 

@@ -24,11 +24,11 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
- // '/': {
-//   view: 'homepage'
-// }
+  // '/': {
+  //   view: 'homepage'
+  // }
 
-'/' : 'PersonController.index',
+  '/': 'PersonController.index',
 
   /***************************************************************************
   *                                                                          *
@@ -51,6 +51,15 @@ module.exports.routes = {
   'GET /person/update/:id': 'PersonController.update',
   'POST /person/update/:id': 'PersonController.update',
 
+  '/person/populate': { view: '404' },//stop pp to use the page directly
+  '/user/populate': { view: '404' },
+  '/user/add': { view: '404' },
+  '/user/remove': { view: '404' },
+
+  '/person/:id/:association': 'PersonController.populate',//pp need to use the page by this
+  '/user/:id/:association': 'UserController.populate',
+  '/user/:id/:association/add/:fk': 'UserController.add',
+  '/user/:id/:association/remove/:fk': 'UserController.remove',
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝

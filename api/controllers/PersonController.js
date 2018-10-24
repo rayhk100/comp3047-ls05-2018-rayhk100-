@@ -127,5 +127,20 @@ module.exports = {
 
         return res.view('person/paginate', { 'persons': persons, 'count': numOfPage });
     },
+    populate: async function (req, res) {//check person/id workFor
+
+        if (!['worksFor'].includes(req.params.association)) return res.notFound();//for workFor wrong link!
+    
+        const message = sails.getInvalidIdMsg(req.params);
+    
+        if (message) return res.badRequest(message);//for error
+    
+        var model = await Person.findOne(req.params.id).populate(req.params.association);
+    
+        if (!model) return res.notFound();//for no id record
+    
+        return res.json(model);//return result
+    
+    },
 };
 
