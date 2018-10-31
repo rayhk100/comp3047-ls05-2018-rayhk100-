@@ -1,7 +1,43 @@
-<%= person.name %>   , <%= person.age %> ,<%= person.id%>,<%= person.createdAt %>
+<!-- <%= person.name %>   , <%= person.age %> ,<%= person.id%>,<%= person.createdAt %>
  
-<form action="/person/delete/<%= person.id %>" method='POST'>
+"<%= person.birthDate.getDate() %>/<%= person.birthDate.getMonth() +1%>/<%= person.birthDate.getFullYear() %>" <!-- get month start from 0 -->
+
+<!-- <form action="/person/delete/<%= person.id %>" method='POST'>
       
-    <button type="sumbit" class="btn btn-primary">detele</button>
+    <button type="sumbit" class="btn btn-primary">Detele</button>
       
-</form>
+</form> -->
+
+<button type="button" class="btn btn-danger" onclick="deletePerson('<%= person.id %>')">Delete</button>
+<div id="deleteResult"></div>
+<script>
+
+    async function deletePerson(id) {
+
+        var dr = document.getElementById("deleteResult");
+
+        var r = confirm("Confirm Delete?");
+        if (r == true) {
+
+            var response = await fetch("/person/" + id, {
+                method: "DELETE",
+                credentials: 'same-origin',
+            });
+
+            console.log(response);
+            
+            if (response.status == 200) {
+                var data = await response.json();
+                dr.innerHTML = data;
+             //   location.reload(true);    //stay on that page
+            } else {
+                dr.innerHTML = response.statusText;
+            }
+
+        } else {
+            dr.innerHTML = "cancelled";
+        }
+
+    };
+
+</script>

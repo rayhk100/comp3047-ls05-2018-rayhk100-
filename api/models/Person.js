@@ -25,7 +25,10 @@ module.exports = {
     age: {
       type: "number"
     },
-
+    birthDate: {            //no user.js but person.js
+      type: 'ref',
+      columnType: 'datetime'
+  },
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝

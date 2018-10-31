@@ -46,15 +46,16 @@ module.exports.bootstrap = async function (done) {
   }
 
   await Person.createEach([
-    { name: "Martin Choy", age: 23 },
-    { name: "Kenny Cheng", age: 22 }
+    { name: "Martin Choy", age: 23, birthDate: new Date('2000/01/01') },
+    { name: "Kenny Cheng", age: 22, birthDate: new Date('2000/02/02') }
     // etc.
-  ]);
+]);
   const hash = await sails.bcrypt.hash('123456', saltRounds);
 
   await User.createEach([
-    { "username": "admin", "password": hash },
-    { "username": "boss", "password": hash }
+    { "username": "admin", "password": hash ,role:'admin'},
+    { "username": "boss", "password": hash  }
+    
     // etc.
   ]);
 
